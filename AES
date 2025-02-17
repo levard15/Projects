@@ -1,0 +1,334 @@
+sbox = [
+    0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
+    0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
+    0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
+    0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
+    0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84,
+    0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf,
+    0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8,
+    0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2,
+    0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73,
+    0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb,
+    0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79,
+    0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08,
+    0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
+    0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
+    0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
+    0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
+]
+
+inv_sbox = [
+    0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
+    0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
+    0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e,
+    0x08, 0x2e, 0xa1, 0x66, 0x28, 0xd9, 0x24, 0xb2, 0x76, 0x5b, 0xa2, 0x49, 0x6d, 0x8b, 0xd1, 0x25,
+    0x72, 0xf8, 0xf6, 0x64, 0x86, 0x68, 0x98, 0x16, 0xd4, 0xa4, 0x5c, 0xcc, 0x5d, 0x65, 0xb6, 0x92,
+    0x6c, 0x70, 0x48, 0x50, 0xfd, 0xed, 0xb9, 0xda, 0x5e, 0x15, 0x46, 0x57, 0xa7, 0x8d, 0x9d, 0x84,
+    0x90, 0xd8, 0xab, 0x00, 0x8c, 0xbc, 0xd3, 0x0a, 0xf7, 0xe4, 0x58, 0x05, 0xb8, 0xb3, 0x45, 0x06,
+    0xd0, 0x2c, 0x1e, 0x8f, 0xca, 0x3f, 0x0f, 0x02, 0xc1, 0xaf, 0xbd, 0x03, 0x01, 0x13, 0x8a, 0x6b,
+    0x3a, 0x91, 0x11, 0x41, 0x4f, 0x67, 0xdc, 0xea, 0x97, 0xf2, 0xcf, 0xce, 0xf0, 0xb4, 0xe6, 0x73,
+    0x96, 0xac, 0x74, 0x22, 0xe7, 0xad, 0x35, 0x85, 0xe2, 0xf9, 0x37, 0xe8, 0x1c, 0x75, 0xdf, 0x6e,
+    0x47, 0xf1, 0x1a, 0x71, 0x1d, 0x29, 0xc5, 0x89, 0x6f, 0xb7, 0x62, 0x0e, 0xaa, 0x18, 0xbe, 0x1b,
+    0xfc, 0x56, 0x3e, 0x4b, 0xc6, 0xd2, 0x79, 0x20, 0x9a, 0xdb, 0xc0, 0xfe, 0x78, 0xcd, 0x5a, 0xf4,
+    0x1f, 0xdd, 0xa8, 0x33, 0x88, 0x07, 0xc7, 0x31, 0xb1, 0x12, 0x10, 0x59, 0x27, 0x80, 0xec, 0x5f,
+    0x60, 0x51, 0x7f, 0xa9, 0x19, 0xb5, 0x4a, 0x0d, 0x2d, 0xe5, 0x7a, 0x9f, 0x93, 0xc9, 0x9c, 0xef,
+    0xa0, 0xe0, 0x3b, 0x4d, 0xae, 0x2a, 0xf5, 0xb0, 0xc8, 0xeb, 0xbb, 0x3c, 0x83, 0x53, 0x99, 0x61,
+    0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d
+]
+
+rcon = [[0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36],
+        [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+]
+
+nb = 4  # количество столбцов состояния (для AES = 4)
+nr = 10  # количество раундов в цикле шифрования (если nb = 4, то nr = 10)
+nk = 4  # длина ключа (в 32-битных словах)
+
+def encrypt(input_data, encryption_key):
+    """Шифрует входные данные с использованием AES."""
+    state_matrix = [[] for j in range(4)]  # Создаем матрицу состояния 4x4
+    for row in range(4):
+        for col in range(nb):
+            state_matrix[row].append(input_data[row + 4 * col])  # Заполняем матрицу состояния входными данными
+
+    key_schedule = key_expansion(encryption_key)  # Расширяем ключ шифрования
+
+    state_matrix = add_round_key(state_matrix, key_schedule)  # Начальное добавление ключа раунда
+
+    for round_num in range(1, nr):  # Цикл по раундам шифрования (от 1 до nr-1)
+        state_matrix = sub_bytes(state_matrix)  # Подстановка байтов с помощью S-блока
+        state_matrix = shift_rows(state_matrix)  # Циклический сдвиг строк
+        state_matrix = mix_columns(state_matrix)  # Смешивание столбцов
+        state_matrix = add_round_key(state_matrix, key_schedule, round_num)  # Добавление ключа раунда
+
+    state_matrix = sub_bytes(state_matrix)  # Подстановка байтов (в последнем раунде нет MixColumns)
+    state_matrix = shift_rows(state_matrix)  # Циклический сдвиг строк
+    state_matrix = add_round_key(state_matrix, key_schedule, round_num + 1)  # Добавление ключа раунда
+
+    output_data = [None for i in range(4 * nb)]  # Создаем массив для вывода
+    for row in range(4):
+        for col in range(nb):
+            output_data[row + 4 * col] = state_matrix[row][col]  # Заполняем массив вывода
+
+    return output_data  # Возвращаем зашифрованные данные
+
+def decrypt(cipher_text, decryption_key):
+    """Расшифровывает данные, зашифрованные с помощью AES."""
+    state_matrix = [[] for i in range(nb)]  # Создаем матрицу состояния
+    for row in range(4):
+        for col in range(nb):
+            state_matrix[row].append(cipher_text[row + 4 * col])  # Заполняем матрицу состояния
+
+    key_schedule = key_expansion(decryption_key)  # Расширяем ключ расшифрования
+
+    state_matrix = add_round_key(state_matrix, key_schedule, nr)  # Начальное добавление ключа раунда
+
+    round_num = nr - 1  # Начинаем с последнего раунда
+    while round_num >= 1:  # Цикл по раундам расшифрования (от nr-1 до 1)
+        state_matrix = shift_rows(state_matrix, inverse=True)  # Обратный циклический сдвиг строк
+        state_matrix = sub_bytes(state_matrix, inverse=True)  # Обратная подстановка байтов
+        state_matrix = add_round_key(state_matrix, key_schedule, round_num)  # Добавление ключа раунда
+        state_matrix = mix_columns(state_matrix, inverse=True)  # Обратное смешивание столбцов
+
+        round_num -= 1  # Переходим к следующему раунду
+
+    state_matrix = shift_rows(state_matrix, inverse=True)  # Обратный циклический сдвиг строк
+    state_matrix = sub_bytes(state_matrix, inverse=True)  # Обратная подстановка байтов
+    state_matrix = add_round_key(state_matrix, key_schedule, round_num)  # Добавление ключа раунда
+
+    output_data = [None for i in range(4 * nb)]  # Создаем массив для вывода
+    for row in range(4):
+        for col in range(nb):
+            output_data[row + 4 * col] = state_matrix[row][col]  # Заполняем массив вывода
+
+    return output_data  # Возвращаем расшифрованные данные
+
+def sub_bytes(state_matrix, inverse=False):
+    """Выполняет подстановку байтов с помощью S-блока (или обратного S-блока)."""
+    if not inverse:  # Шифрование
+        substitution_box = sbox  # Используем S-блок
+    else:  # Дешифрование
+        substitution_box = inv_sbox  # Используем обратный S-блок
+
+    for i in range(len(state_matrix)):  # Перебираем строки матрицы
+        for j in range(len(state_matrix[i])):  # Перебираем столбцы матрицы
+            row = state_matrix[i][j] // 0x10  # Вычисляем номер строки в S-блоке
+            col = state_matrix[i][j] % 0x10  # Вычисляем номер столбца в S-блоке
+            box_element = substitution_box[16 * row + col]  # Получаем значение из S-блока
+            state_matrix[i][j] = box_element  # Заменяем значение в матрице состояния
+
+    return state_matrix  # Возвращаем измененную матрицу
+
+def shift_rows(state_matrix, inverse=False):
+    """Выполняет циклический сдвиг строк матрицы состояния."""
+    shift_count = 1  # Начальное значение сдвига
+
+    if not inverse:  # Шифрование
+        for i in range(1, nb):  # Перебираем строки матрицы (начиная со второй)
+            state_matrix[i] = left_shift(state_matrix[i], shift_count)  # Сдвигаем строку влево
+            shift_count += 1  # Увеличиваем сдвиг для каждой следующей строки
+    else:  # Дешифрование
+        for i in range(1, nb):  # Перебираем строки матрицы (начиная со второй)
+            state_matrix[i] = right_shift(state_matrix[i], shift_count)  # Сдвигаем строку вправо
+            shift_count += 1  # Увеличиваем сдвиг для каждой следующей строки
+
+    return state_matrix  # Возвращаем измененную матрицу
+
+def mix_columns(state_matrix, inverse=False):
+    """Выполняет операцию MixColumns (или обратную операцию InvMixColumns)."""
+    for col in range(nb):  # Перебираем столбцы матрицы состояния
+
+        if not inverse:  # Шифрование (MixColumns)
+            # Вычисляем новые значения для каждого байта в столбце
+            s0 = mul_by_02(state_matrix[0][col]) ^ mul_by_03(state_matrix[1][col]) ^ state_matrix[2][col] ^ state_matrix[3][col]
+            s1 = state_matrix[0][col] ^ mul_by_02(state_matrix[1][col]) ^ mul_by_03(state_matrix[2][col]) ^ state_matrix[3][col]
+            s2 = state_matrix[0][col] ^ state_matrix[1][col] ^ mul_by_02(state_matrix[2][col]) ^ mul_by_03(state_matrix[3][col])
+            s3 = mul_by_03(state_matrix[0][col]) ^ state_matrix[1][col] ^ state_matrix[2][col] ^ mul_by_02(state_matrix[3][col])
+        else:  # Дешифрование (InvMixColumns)
+            # Вычисляем новые значения для каждого байта в столбце (обратная операция)
+            s0 = mul_by_0e(state_matrix[0][col]) ^ mul_by_0b(state_matrix[1][col]) ^ mul_by_0d(state_matrix[2][col]) ^ mul_by_09(state_matrix[3][col])
+            s1 = mul_by_09(state_matrix[0][col]) ^ mul_by_0e(state_matrix[1][col]) ^ mul_by_0b(state_matrix[2][col]) ^ mul_by_0d(state_matrix[3][col])
+            s2 = mul_by_0d(state_matrix[0][col]) ^ mul_by_09(state_matrix[1][col]) ^ mul_by_0e(state_matrix[2][col]) ^ mul_by_0b(state_matrix[3][col])
+            s3 = mul_by_0b(state_matrix[0][col]) ^ mul_by_0d(state_matrix[1][col]) ^ mul_by_09(state_matrix[2][col]) ^ mul_by_0e(state_matrix[3][col])
+
+        state_matrix[0][col] = s0  # Обновляем значения в матрице состояния
+        state_matrix[1][col] = s1
+        state_matrix[2][col] = s2
+        state_matrix[3][col] = s3
+
+    return state_matrix  # Возвращаем измененную матрицу состояния
+
+def key_expansion(encryption_key):
+    """Расширяет ключ шифрования для использования в каждом раунде AES."""
+    key_symbols = [ord(symbol) for symbol in encryption_key]  # Преобразуем ключ в список кодов символов
+
+    # Дополняем ключ, если он короче 4*nk
+    if len(key_symbols) < 4 * nk:
+        for i in range(4 * nk - len(key_symbols)):
+            key_symbols.append(0x01)
+
+    key_schedule = [[] for i in range(4)]  # Создаем матрицу для расширенного ключа
+    for row in range(4):
+        for col in range(nk):
+            key_schedule[row].append(key_symbols[row + 4 * col])  # Заполняем начальные значения ключа
+
+    for col in range(nk, nb * (nr + 1)):  # Генерируем остальные части ключа
+        if col % nk == 0:  # Для каждого nk-го столбца
+            temp = [key_schedule[row][col - 1] for row in range(1, 4)]  # Циклический сдвиг вверх
+            temp.append(key_schedule[0][col - 1])
+
+            for j in range(len(temp)):  # Подстановка байтов с помощью S-блока
+                sbox_row = temp[j] // 0x10
+                sbox_col = temp[j] % 0x10
+                sbox_element = sbox[16 * sbox_row + sbox_col]
+                temp[j] = sbox_element
+
+            for row in range(4):  # XOR с константой раунда (rcon) и предыдущим столбцом
+                s = (key_schedule[row][col - 4]) ^ (temp[row]) ^ (rcon[row][int(col / nk - 1)])
+                key_schedule[row].append(s)
+
+        else:  # Для остальных столбцов
+            for row in range(4):  # XOR с предыдущим столбцом
+                s = key_schedule[row][col - 4] ^ key_schedule[row][col - 1]
+                key_schedule[row].append(s)
+
+    return key_schedule  # Возвращаем расширенный ключ
+
+
+def add_round_key(state_matrix, key_schedule, round_num=0):
+    """Добавляет ключ раунда к матрице состояния.
+
+    Args:
+        state_matrix: Матрица состояния (список списков).
+        key_schedule: Расширенный ключ (матрица).
+        round_num: Номер раунда.
+
+    Returns:
+        Измененная матрица состояния.
+    """
+    for col in range(nk):  # Перебираем столбцы матрицы состояния
+        # Выполняем XOR каждого байта state_matrix с соответствующим байтом key_schedule
+        s0 = state_matrix[0][col] ^ key_schedule[0][nb * round_num + col]
+        s1 = state_matrix[1][col] ^ key_schedule[1][nb * round_num + col]
+        s2 = state_matrix[2][col] ^ key_schedule[2][nb * round_num + col]
+        s3 = state_matrix[3][col] ^ key_schedule[3][nb * round_num + col]
+
+        # Обновляем значения в матрице состояния
+        state_matrix[0][col] = s0
+        state_matrix[1][col] = s1
+        state_matrix[2][col] = s2
+        state_matrix[3][col] = s3
+
+    return state_matrix  # Возвращаем измененную матрицу состояния
+
+def left_shift(array, shift_count):
+    """Выполняет циклический сдвиг массива влево."""
+    result = array[:]  # Создаем копию массива
+    for i in range(shift_count):  # Выполняем сдвиг shift_count раз
+        temp = result[1:]  # Берем все элементы, кроме первого
+        temp.append(result[0])  # Добавляем первый элемент в конец
+        result[:] = temp[:]  # Обновляем result
+
+    return result  # Возвращаем сдвинутый массив
+
+def right_shift(array, shift_count):
+    """Выполняет циклический сдвиг массива вправо."""
+    result = array[:]  # Создаем копию массива
+    for i in range(shift_count):  # Выполняем сдвиг shift_count раз
+        temp = result[:-1]  # Берем все элементы, кроме последнего
+        temp.insert(0, result[-1])  # Вставляем последний элемент в начало
+        result[:] = temp[:]  # Обновляем result
+
+    return result  # Возвращаем сдвинутый массив
+
+def mul_by_02(number):
+    """Умножает число на 2 в поле GF(2^8)."""
+    if number < 0x80:  # Если старший бит равен 0
+        result = (number << 1)  # Сдвигаем влево на 1 бит
+    else:  # Если старший бит равен 1
+        result = (number << 1) ^ 0x1b  # Сдвигаем влево на 1 бит и выполняем XOR с 0x1b (неприводимым многочленом)
+
+    return result % 0x100  # Возвращаем остаток от деления на 256
+
+def mul_by_03(number):
+    """Умножает число на 3 в поле GF(2^8)."""
+    return (mul_by_02(number) ^ number)
+
+def mul_by_09(number):
+    """Умножает число на 9 в поле GF(2^8)."""
+    return mul_by_02(mul_by_02(mul_by_02(number))) ^ number  
+
+def mul_by_0b(number):
+    """Умножает число на 11 (0b) в поле GF(2^8)."""
+    return mul_by_02(mul_by_02(mul_by_02(number))) ^ mul_by_02(number) ^ number  
+
+def mul_by_0d(number):
+    """Умножает число на 13 (0d) в поле GF(2^8)."""
+    return mul_by_02(mul_by_02(mul_by_02(number))) ^ mul_by_02(mul_by_02(number)) ^ number  
+
+def mul_by_0e(number):
+    """Умножает число на 14 (0e) в поле GF(2^8)."""
+    return mul_by_02(mul_by_02(mul_by_02(number))) ^ mul_by_02(mul_by_02(number)) ^ mul_by_02(number)  
+
+def pad(data):
+    """Дополняет данные нулями и единицей до длины, кратной 16."""
+    empty_spaces = 16 - len(data)  # Вычисляем количество недостающих байтов
+    for i in range(empty_spaces - 1):  # Добавляем нули
+        data.append(0)
+    data.append(1)  # Добавляем единицу в конец
+    return data  # Возвращаем дополненный список
+
+def unpad(data):
+    """Удаляет дополнение из данных."""
+    padding_length = data[-1] # Определяем длину дополнения по последнему байту
+    return data[:-padding_length] # Возвращаем данные без дополнения
+
+def main():
+    """Основная функция для шифрования и расшифрования текста с помощью AES."""
+    encryption_key = input("Введите ключ (<=16 символов): ")  # Запрашиваем ключ у пользователя (до 16 символов)
+    input_message = input("Введите сообщение: ")  # Запрашиваем сообщение у пользователя
+
+    try:
+        encrypted_data = []  # Список для хранения зашифрованных данных
+        temp_data = []  # Временный список для накопления блоков данных по 16 байт
+
+        for byte in input_message.encode('utf-8'):  # Перебираем байты сообщения, закодированного в UTF-8
+            temp_data.append(byte)  # Добавляем байт во временный список
+            if len(temp_data) == 16:  # Если набралось 16 байт (размер блока AES)
+                encrypted_part = encrypt(bytes(temp_data), encryption_key)  # Шифруем блок
+                encrypted_data.extend(encrypted_part)  # Добавляем зашифрованный блок к результату
+                temp_data.clear()  # Очищаем временный список
+
+        if 0 < len(temp_data) < 16:  # Если после цикла остались данные (менее 16 байт)
+            temp_data = pad(temp_data)  # Дополняем данные до 16 байт
+            encrypted_part = encrypt(bytes(temp_data), encryption_key)  # Шифруем дополненный блок
+            encrypted_data.extend(encrypted_part)  # Добавляем зашифрованный блок к результату
+        print("Зашифрованное сообщение:", encrypted_data)  # Выводим зашифрованное сообщение
+
+        decrypted_data = []  # Список для хранения расшифрованных данных
+        temp_data = []  # Временный список для накопления блоков данных по 16 байт
+        for byte in encrypted_data:  # Перебираем байты зашифрованного сообщения
+            temp_data.append(byte)  # Добавляем байт во временный список
+            if len(temp_data) == 16:  # Если набралось 16 байт
+                decrypted_part = decrypt(bytes(temp_data), encryption_key)  # Расшифровываем блок
+                decrypted_data.extend(decrypted_part)  # Добавляем расшифрованный блок к результату
+                temp_data.clear()  # Очищаем временный список
+
+        if 0 < len(temp_data) < 16:  # Если после цикла остались данные (менее 16 байт) -  обработка неполного блока
+            empty_spaces = 16 - len(temp_data) #  вычисляем, сколько байт нужно добавить
+            for i in range(empty_spaces - 1): # добавляем нули
+                temp_data.append(0)
+            temp_data.append(1) # добавляем единицу в конец в качестве маркера дополнения
+            decrypted_part = decrypt(bytes(temp_data), encryption_key)  # Расшифровываем дополненный блок
+            decrypted_data.extend(decrypted_part)  # Добавляем расшифрованный блок к результату
+
+        decrypted_message = unpad(bytes(decrypted_data)).decode()  # Удаляем дополнение и декодируем сообщение из UTF-8
+        print("Расшифрованное сообщение:", decrypted_message)  # Выводим расшифрованное сообщение
+
+    except Exception as e:  # Обрабатываем возможные исключения
+        print(f"Ошибка: {e}")  # Выводим сообщение об ошибке
+
+if __name__ == "__main__":
+    main()  
