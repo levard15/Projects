@@ -1,0 +1,72 @@
+import random
+import math
+
+def check_prime(n):
+    """Проверяет, является ли число n простым."""
+    for i in range(2, int(math.sqrt(n))): # Перебираем числа от 2 до корня из n
+        if n % i == 0: # Если n делится на i без остатка, то n не простое
+            return False # Возвращаем False
+    return True # Если ни одно число не делит n, то n простое
+
+def prime():
+    """Генерирует случайное простое число."""
+    while True:
+        n = random.randrange(2000, 100000) # Генерируем случайное число от 2000 до 100000
+        if check_prime(n): # Проверяем, является ли число простым
+            return n # Возвращаем простое число
+
+def extended_equlid_alg(a, b):
+    """Расширенный алгоритм Евклида."""
+    if a == 0: # Базовый случай
+        return (b, 0, 1) # Возвращаем значения для базового случая
+    else: # Рекурсивный случай
+        g, x, y = extended_equlid_alg(b % a, a) # Рекурсивный вызов функции
+        return (g, y - (b // a) * x, x) # Возвращаем значения для рекурсивного случая
+
+def modular_inverse(e, phi):
+    """Вычисляет обратный элемент по модулю."""
+    g, x ,y=  extended_equlid_alg(e, phi) # Вызываем расширенный алгоритм Евклида
+    if g != 1: # Если НОД не равен 1, то обратного элемента не существует
+        return False # Возвращаем False
+    return x % phi # Возвращаем обратный элемент по модулю phi
+
+def gen_values():
+    """Генерирует ключи."""
+    while True: # Бесконечный цикл
+        p = prime() # Генерируем первое простое число
+        q = prime() # Генерируем второе простое число
+        n = p * q # Вычисляем n
+        eiler_func = (p-1)*(q-1) # Вычисляем функцию Эйлера
+        e = prime() # Генерируем открытую экспоненту
+        if e > n: # Если e больше n, то начинаем цикл заново
+            continue # Переходим к следующей итерации цикла
+        d =  modular_inverse(e,eiler_func) # Вычисляем закрытую экспоненту
+        if not d: # Если закрытая экспонента не существует, то начинаем цикл заново
+            continue # Переходим к следующей итерации цикла
+        if n < 20000: # Если n меньше 20000, то начинаем цикл заново
+            continue # Переходим к следующей итерации цикла
+        return [e,n,d] # Возвращаем ключи
+
+def encrypt(message, n, e):
+    """Шифрует сообщение."""
+    encrypted_message = [] # Создаем пустой список для зашифрованного сообщения
+    for i in message: # Перебираем символы сообщения
+        enc_char = pow(ord(i),e,n) # Шифруем символ
+        encrypted_message.append(enc_char) # Добавляем зашифрованный символ в список
+    return encrypted_message # Возвращаем зашифрованное сообщение
+
+def decrypt(encrypted_message, n, d):
+    """Расшифровывает сообщение."""
+    decrypted_message = [] # Создаем пустой список для расшифрованного сообщения
+    for i in encrypted_message: # Перебираем зашифрованные символы
+        dec_char = chr(pow(i,d,n)) # Расшифровываем символ
+        decrypted_message.append(dec_char) # Добавляем расшифрованный символ в список
+    return ''.join(decrypted_message) # Возвращаем расшифрованное сообщение
+
+# main
+init_vec = gen_values() # Генерируем ключи
+message = input("Введите сообщение: ") # Запрашиваем сообщение 
+cryptotext = encrypt(message,init_vec[1], init_vec[0]) # Шифруем сообщение
+print("Encrypted message: ",cryptotext) # Выводим зашифрованное сообщение
+my_message = decrypt(cryptotext,init_vec[1],init_vec[2]) # Расшифровываем сообщение
+print("Decrypted message: ", my_message) # Выводим расшифрованное сообщение
